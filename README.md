@@ -115,3 +115,37 @@ This is simply the name of the function that GIMP should call when the user clic
 
 ## The main callback
 This is the function, GIMP should call when the user clicks OK in the dialog.
+It is passed the current image (timg), the current drawable (tdrawable) and all parameters that we defined earlier. All tutorials on the web show that the parameters have to be default-initialized again here (`x=36, b=TRUE`).
+
+In this function, all your stuff happens. Both Python functionality (`print`, loops, calculation, etc.) as well as other GIMP routines can be used.
+
+For the `print` function to output somewhere, Nathan Good says that GIMP has to be started from the console. I tried to start GIMP via PowerShell, but didn't get any output on the print function, maybe this only works under Linux.
+
+### Other GIMP routines
+
+The most helpful tool from here on is the Procedure Browser (`Help > Procedure Browser`). You can search for anything in all available procedures.
+
+For my rotate plugin, I first searched for a layer by entering `rotate` into the search box:
+![Screenshot of the Procedure Browser](./procbrowser.png)
+
+The first result is `gimp-drawable-transform-rotate` and variations of it. However, all of them have a deprecation notice, so I had to use `gimp-item-transform-rotate` instead. The difference between it and its `-simple` variant is that the `simple` variant can only rotate by multiples of 90 degrees. The normal version takes an angle in radians instead.
+
+#### Calling other GIMP routines
+
+
+
+#### Duplicating a layer
+
+The second step was to clone the rotor layer. I couldn't find any suiting procedure by searching for either `clone` or `duplicate` in the Procedure Browser, so I copied the functionality from [Calinou's InsaneBump GIMP plugin](https://gist.github.com/Calinou/5b9bd428079959558ba8):
+1. Duplicate the layer in GIMP's ram by calling `gimp-layer-copy`.
+2. Adding the new layer to the selected image by calling `gimp-image-insert-layer`.
+
+The original example uses `gimp-image-add-layer`, however this function has been deprecated since the introduction of Layer Groups
+
+`gimp-image-insert-layer` takes four parameters:
+1. The image (`timg` in the example)
+2. The new layer that should be inserted (the one that was returned from `gimp-layer-copy`)
+3. The parent layer / the parent of the layer group that this layer should be inserted in. [If the layer shouldn't be in any layer group, simply use `None`.](http://gimpchat.com/viewtopic.php?f=9&t=5709)
+4. The position in the layer stack where the layer should be inserted. Starting from the top (0). There are some extra quirks to it that can be read in the Procedure Browser.
+
+
