@@ -58,9 +58,9 @@ This is somewhat helpful. But what is a `blurb`? How should the `params` be spec
 
 According to [the GIMP reference](https://developer.gimp.org/writing-a-plug-in/1/index.html) (scroll down to "The query() function"), "gimp_install_procedure [which is the C aequivalent to python-fu's register] declares the procedure name, some description and help strings [...]". A paragraph down, there is a list of image types (which might very well be outdated as the article is from 2003).
 
-However, [Nathan Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) has a table with all parameters.
+Even better, [Nathan Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) has a table with all parameters.
 
-[The Gimp Python Documentation, Chapter 2.3. Plugin Framework, also contains information for the `register()` function](https://gimp.org/docs/python/index.html#PLUGIN-FRAMEWORK)
+[The Gimp Python Documentation, Chapter 2.3. Plugin Framework, also has information for the `register()` function.](https://gimp.org/docs/python/index.html#PLUGIN-FRAMEWORK)
 
 This repository contains a basic example using `register()` named `hellogimp.py`.
 I've also compiled some more information about the parameters:
@@ -119,7 +119,7 @@ It is passed the current image (timg), the current drawable (tdrawable) and all 
 
 In this function, all your stuff happens. Both Python functionality (`print`, loops, calculation, etc.) as well as other GIMP routines can be used.
 
-For the `print` function to output somewhere, Nathan Good says that GIMP has to be started from the console. I tried to start GIMP via PowerShell, but didn't get any output on the print function, maybe this only works under Linux.
+For the `print` function to output somewhere, [Nathan Good says that GIMP has to be started from the console](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) (scroll all the way to the end of that section). I tried to start GIMP via PowerShell, but didn't get any output on the print function, maybe this only works under Linux.
 
 ### Other GIMP routines
 
@@ -220,4 +220,3 @@ I thought that there was a memory leak somewhere, C plugins can and *should* use
  - [Gimp Developers: How to write a GIMP plug-in](https://developer.gimp.org/writing-a-plug-in/1/index.html)
  - [Gimp Docs: Scripting](https://docs.gimp.org/en/gimp-scripting.html)
  - [stackoverflow: GIMP duplicate layer at script-fu console](https://stackoverflow.com/questions/55996224/gimp-duplicate-layer-at-script-fu-console)
-
