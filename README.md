@@ -132,7 +132,26 @@ The first result is `gimp-drawable-transform-rotate` and variations of it. Howev
 
 #### Calling other GIMP routines
 
+Both [InsaneBump](https://gist.github.com/Calinou/5b9bd428079959558ba8) and [Nathan Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) use the `pdb` element to call GIMP procedures and replace dashes `-` by underscores `_`:
 
+```
+# Save the image:
+pdb.gimp_file_save(image, layer, filename, filename)
+
+# Clone the layer:
+newlayer = pdb.gimp_layer_copy (drawable, 1)
+
+# Resize the image:
+pdb.gimp_image_scale(timg, newWidth, newHeight)
+```
+I have no clue why the `-` are replaced with `_`. The `pdb` is included when using `import gimpfu`.
+
+Some functions return multiple values, e. g. `gimp-image-get-layers`. I don't know how these should be handled by the Plugin developer.
+
+Every value required (image, layer, coordinates) are either
+1. passed to the plugin_main function (timg, tdrawable)
+2. to be selected by the user via a parameter
+3. to be calculated by internals of the plugin
 
 #### Duplicating a layer
 
@@ -148,4 +167,57 @@ The original example uses `gimp-image-add-layer`, however this function has been
 3. The parent layer / the parent of the layer group that this layer should be inserted in. [If the layer shouldn't be in any layer group, simply use `None`.](http://gimpchat.com/viewtopic.php?f=9&t=5709)
 4. The position in the layer stack where the layer should be inserted. Starting from the top (0). There are some extra quirks to it that can be read in the Procedure Browser.
 
+#### Putting it all together
+So far we have:
+
+1. Obtaining the rotor & backdrop layers by either retrieving them using `gimp-image-get-layer-by-name` or by passing them as parameters:
+```
+def plugin_main(timg, tdrawable, steps=36, autocenter=TRUE, rotorlayer=None, backdroplayer=None, cx=0, cy=0):
+	#rotorlayer = pdb.gimp_image_get_layer_by_name(timg, "rotor")
+	#backdroplayer = pdb.gimp_image_get_layer_by_name(timg, "backdrop")
+```
+2. Duplicating the rotor & backdrop:
+```
+	mybackdrop = pdb.gimp_layer_copy(backdroplayer, FALSE)
+	pdb.gimp_image_insert_layer(timg, mybackdrop, None, 0)
+	myrotor = pdb.gimp_layer_copy(rotorlayer, FALSE)
+	pdb.gimp_image_insert_layer(timg, myrotor, None, 0)
+```
+3. Rotate the rotor:
+```
+	pdb.gimp_item_transform_rotate(myrotor, angle, autocenter, cx, cy)
+```
+4. Merge rotor & backdrop:
+```
+	pdb.gimp_image_merge_down(timg, myrotor, 1)
+```
+5. Repeat this `steps` time:
+```
+	for x in range(steps-1):
+		mybackdrop = pdb.gimp_layer_copy(backdroplayer, FALSE)
+		pdb.gimp_image_insert_layer(timg, mybackdrop, None, 0)
+
+		myrotor = pdb.gimp_layer_copy(rotorlayer, FALSE)
+		pdb.gimp_image_insert_layer(timg, myrotor, None, 0)
+		pdb.gimp_item_transform_rotate(myrotor, (x + 1) * angle, autocenter, cx, cy)
+
+		pdb.gimp_image_merge_down(timg, myrotor, 1)
+```
+
+And that's basically it!
+
+#### Performance
+I first tried to clone the rotor layer, rotate it by some amount, clone the rotated layer and rotate it by the same amount.
+However, in my test, I got very bad performance with this.
+With just 36 steps, the final xcf was over 6 gigs large and as such slowed down my entire pc.
+I thought that there was a memory leak somewhere, C plugins can and *should* use `g_free()` to free things they don't need anymore (layers, brushes, ...), but there is no such thing in the Python version. I guess that the history stack grew too large or something, so I scrapped that idea and instead cloned the initial image over and over.
+
+## More sources
+ - [Gimp Python Documentation](https://www.gimp.org/docs/python/index.html)
+ - [Nathan Good: Use Python to write plug-ins for GIMP](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources)
+ - [Calinou: InsaneBump GIMP plugin](https://gist.github.com/Calinou/5b9bd428079959558ba8)
+ - [Gimp Wiki: Hacking:Plugins](https://wiki.gimp.org/wiki/Hacking:Plugins)
+ - [Gimp Developers: How to write a GIMP plug-in](https://developer.gimp.org/writing-a-plug-in/1/index.html)
+ - [Gimp Docs: Scripting](https://docs.gimp.org/en/gimp-scripting.html)
+ - [stackoverflow: GIMP duplicate layer at script-fu console](https://stackoverflow.com/questions/55996224/gimp-duplicate-layer-at-script-fu-console)
 
