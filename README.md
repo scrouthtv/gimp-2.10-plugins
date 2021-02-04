@@ -68,7 +68,7 @@ I've also compiled some more information about the parameters:
 #### proc_name
 The name of the command / script / plug-in. Keep in mind, that this has to be unique across your entire GIMP installation, so no script should share a name with another script or built-in routine. 
 
-These can conventially be called "python_fu_<what the script does>".
+These can conventially be called `"python_fu_<what the script does>"`.
 
 #### blurb
 ![Blurb appears in the tooltip when hovering over the plugin as well as at the top of the Dialog](./register_params/blurb.jpg)
@@ -100,3 +100,18 @@ There are `RGB`, `INDEXED`, `GRAY`, with and without an added `A` for alpha. `RG
 
 Note that the comma is inside the string: `"RGBA*, GRAY*"`, **not** ~~`"RGBA*", "GRAY*"`~~.
 
+#### params, results
+Params are what the user should set in the dialog before running the plugin. Results are what the plugin returns, this is only useful for (internal) routines.
+
+Params an array of quadruplets. Results is an array of triplets. Each tuple has:
+1. A type: `PF_INT`, `PF_FLOAT`, `PF_STRING`, `PF_INTARRAY`, `PF_COLOR`, `PF_REGION`, `PF_REGION`, `PF_LAYER`, `PF_TOGGLE`, ...
+Many more types are in [Chapter 2.3 of the Gimp Python documentation](https://gimp.org/docs/python/index.html#PLUGIN-FRAMEWORK).
+2. A name. I don't know whether it's relevant at all
+3. Description: What is displayed in the dialog in front of the selector: ![Description in the dialog](./register_params/description.png)
+4. Only for params: A default value. This is what the field will be set to on GIMP launch.
+
+#### function
+This is simply the name of the function that GIMP should call when the user clicks OK.
+
+## The main callback
+This is the function, GIMP should call when the user clicks OK in the dialog.
