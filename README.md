@@ -1,9 +1,9 @@
 # Writing python plugins for GIMP v2.10
 
- 1. [Preface](#preface)
- 2. [Tutorials on the internet](#tutorials-on-the-internet)
- 3. [Python Plugin: The Basics](#python-plugin--the-basics)
-   + [The register() function](#the-register---function)
+1. [Preface](#preface)
+2. [Tutorials on the internet](#tutorials-on-the-internet)
+3. [Python Plugin: The Basics](#python-plugin--the-basics)
+	+ [The register() function](#the-register---function)
      - [proc_name](#proc-name)
      - [blurb](#blurb)
      - [help, author, copyright, date](#help--author--copyright--date)
@@ -11,13 +11,13 @@
      - [imagetypes](#imagetypes)
      - [params, results](#params--results)
      - [function](#function)
-   + [The main callback](#the-main-callback)
+	+ [The main callback](#the-main-callback)
      - [GIMP routines](#gimp-routines)
      - [Calling GIMP routines](#calling-gimp-routines)
      - [Duplicating a layer](#duplicating-a-layer)
      - [Putting it all together](#putting-it-all-together)
- 4. [Performance](#performance)
- 5. [More sources](#more-sources)
+4. [Performance](#performance)
+5. [More sources](#more-sources)
 
 ## Preface
 
