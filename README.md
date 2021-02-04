@@ -8,7 +8,9 @@ My idea was to separate the picture into two layers: the backdrop and the rotor.
 Afterwards, I'd also clone the backdrop 360 times and merge it with each rotated rotor image.
 
 Here is an example with 12 frames made by hand:
-![Simple animation](./anim1.gif)
+
+<img alt="Simple animation" src="./anim1.gif" height="480" />
+
 And this little ugly thing took me already half an hour.
 
 As there is a lot of work to do, I wanted a script / plugin to do it for me. In my opinion, the beauty of GIMP is that it's so easily extensible and comes with a fair amount of good plugins installed.
@@ -19,5 +21,6 @@ Now here the trouble starts. I could only find three (good) references on writin
  - [Nathan Good: Use Python to write plug-ins for GIMP](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources)
  - [Calinou: InsaneBump GIMP plugin](https://gist.github.com/Calinou/5b9bd428079959558ba8)
  - [An Example Plugin in the GIMP reference](https://gimp.org/docs/python/index.html#STRUCTURE-OF-PLUGIN)
+
 Keep in mind that the third link is for GIMP v1 (which is, funny enough, still from the last millenium).
 Also there's [How to write a GIMP plug-in](https://developer.gimp.org/writing-a-plug-in/1/index.html), but this is mostly technical stuff spread over three parts - and it is also for GIMP v1.
