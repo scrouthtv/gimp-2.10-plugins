@@ -1,5 +1,26 @@
 # Writing python plugins for GIMP v2.10
 
+ 1. [Preface](#preface)
+ 2. [Tutorials on the internet](#tutorials-on-the-internet)
+ 3. [Python Plugin: The Basics](#python-plugin--the-basics)
+   3.1. [The register() function](#the-register---function)
+     - [proc_name](#proc-name)
+     - [blurb](#blurb)
+     - [help, author, copyright, date](#help--author--copyright--date)
+     - [label](#label)
+     - [imagetypes](#imagetypes)
+     - [params, results](#params--results)
+     - [function](#function)
+   3.2. [The main callback](#the-main-callback)
+     - [GIMP routines](#gimp-routines)
+     - [Calling GIMP routines](#calling-gimp-routines)
+     - [Duplicating a layer](#duplicating-a-layer)
+     - [Putting it all together](#putting-it-all-together)
+ 4. [Performance](#performance)
+ 5. [More sources](#more-sources)
+
+## Preface
+
 In early 2021, I was bored and decided to animate this profile picture that I've been using for some time now:
 <img alt="Minimalistic windmill" src="./templ.jpeg" height="480" />
 
@@ -113,7 +134,7 @@ Many more types are in [Chapter 2.3 of the Gimp Python documentation](https://gi
 #### function
 This is simply the name of the function that GIMP should call when the user clicks OK.
 
-## The main callback
+### The main callback
 This is the function, GIMP should call when the user clicks OK in the dialog.
 It is passed the current image (timg), the current drawable (tdrawable) and all parameters that we defined earlier. All tutorials on the web show that the parameters have to be default-initialized again here (`x=36, b=TRUE`).
 
@@ -121,7 +142,7 @@ In this function, all your stuff happens. Both Python functionality (`print`, lo
 
 For the `print` function to output somewhere, [Nathan Good says that GIMP has to be started from the console](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) (scroll all the way to the end of that section). I tried to start GIMP via PowerShell, but didn't get any output on the print function, maybe this only works under Linux.
 
-### Other GIMP routines
+#### GIMP routines
 
 The most helpful tool from here on is the Procedure Browser (`Help > Procedure Browser`). You can search for anything in all available procedures.
 
@@ -130,7 +151,7 @@ For my rotate plugin, I first searched for a layer by entering `rotate` into the
 
 The first result is `gimp-drawable-transform-rotate` and variations of it. However, all of them have a deprecation notice, so I had to use `gimp-item-transform-rotate` instead. The difference between it and its `-simple` variant is that the `simple` variant can only rotate by multiples of 90 degrees. The normal version takes an angle in radians instead.
 
-#### Calling other GIMP routines
+#### Calling GIMP routines
 
 Both [InsaneBump](https://gist.github.com/Calinou/5b9bd428079959558ba8) and [Nathan Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) use the `pdb` element to call GIMP procedures and replace dashes `-` by underscores `_`:
 
@@ -206,7 +227,7 @@ def plugin_main(timg, tdrawable, steps=36, autocenter=TRUE, rotorlayer=None, bac
 
 And that's basically it!
 
-#### Performance
+## Performance
 I first tried to clone the rotor layer, rotate it by some amount, clone the rotated layer and rotate it by the same amount.
 However, in my test, I got very bad performance with this.
 With just 36 steps, the final xcf was over 6 gigs large and as such slowed down my entire pc.
