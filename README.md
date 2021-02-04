@@ -58,9 +58,9 @@ This is somewhat helpful. But what is a `blurb`? How should the `params` be spec
 
 According to [the GIMP reference](https://developer.gimp.org/writing-a-plug-in/1/index.html) (scroll down to "The query() function"), "gimp_install_procedure [which is the C aequivalent to python-fu's register] declares the procedure name, some description and help strings [...]". A paragraph down, there is a list of image types (which might very well be outdated as the article is from 2003).
 
-However, [Natahn Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) has a table with all parameters.
+However, [Nathan Good's article](https://ibm.com/developerworks/opensource/library/os-autogimp/index.html#resources) has a table with all parameters.
 
-[The chapter 2.3. Plugin Framework also contains information for the `register()` function](https://gimp.org/docs/python/index.html#PLUGIN-FRAMEWORK)
+[The Gimp Python Documentation, Chapter 2.3. Plugin Framework, also contains information for the `register()` function](https://gimp.org/docs/python/index.html#PLUGIN-FRAMEWORK)
 
 This repository contains a basic example using `register()` named `hellogimp.py`.
 I've also compiled some more information about the parameters:
@@ -75,12 +75,12 @@ These can conventially be called "python_fu_<what the script does>".
 
 Blurb appears in the tooltip when hovering over the plugin's entry in the menu. Blurb is also at the top of the Dialog that appears before the filter is executed.
 
-### help, author, copyright, date
+#### help, author, copyright, date
 These three are very hidden. They don't appear in the normal UI, but can be viewed in either the Procedure Browser or Plugin Browser, both available via the Help menu:
 ![Procedure Browser and Plugin Browser](./register_params/help.png)
 I couldn't find any of those in another place.
 
-### label
+#### label
 label is an internal value that changes where the plugin can be accessed. Again, there's no real help for the parameters.
 So far, I've seen these:
  - The first part in <> specifies which toolbar contains the plugin. So far I've seen:
@@ -92,4 +92,11 @@ So far, I've seen these:
  - The rest is a "/"-separated path in the specified toolbar.
 
 My example, `<Image>/Filters/Hello GIMP!`, creates a new entry called `Hello GIMP!` in the Filters tab of the main toolbar.
-The option remains disabled as long as no image is opened.
+*The option remains disabled as long as no image is opened.*
+
+#### imagetypes
+This again is on the [Gimp developers page](https://developer.gimp.org/writing-a-plug-in/1/index.html) (scroll down to "The query() function"):
+There are `RGB`, `INDEXED`, `GRAY`, with and without an added `A` for alpha. `RGBA*, GRAY*` refers to `RGB`, `RGBA`, `GRAY`, `GRAYA`. Please don't ask me what `INDEXED` refers to.
+
+Note that the comma is inside the string: `"RGBA*, GRAY*"`, **not** ~~`"RGBA*", "GRAY*"`~~.
+
