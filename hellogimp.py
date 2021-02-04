@@ -17,23 +17,21 @@
 from gimpfu import *
 import math
 
-def plugin_main(timg, tdrawable, steps=36, autocenter=TRUE, cx=0, cy=0):
-    print "Hello world"
+def plugin_main(timg, tdrawable, x=36, b=TRUE):
+    print 'Hello world: %x, %r' % (x, b)
 
 register(
         "python_fu_helloworld",
-        "Here is some text",
-        "Here is more text",
-        "My name",
-        "My name again",
-        "2020",
-        "<Image>/Filters/Animation/Rotate...",
+        "blurb: Here is the first text",
+        "help: Here is the help text",
+        "author: My name",
+        "copyright: My company",
+        "date: 2020",
+        "<Image>/Filters/Hello GIMP!",
         "RGB*, GRAY*",
         [
-            (PF_INT, "steps", "Animation Steps", "36"),
-            (PF_BOOL, "autocenter", "Rotate around the center of the rotor", TRUE),
-            (PF_INT, "cx", "X Center of rotation", "0"),
-            (PF_INT, "cy", "Y Center of rotation", "0"),
+            (PF_INT, "x", "An integer value:", "36"),
+            (PF_BOOL, "b", "Is the weather nice?", TRUE),
         ],
         [],
         plugin_main)
